@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>考研英语一 · 作文功能句背诵</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#eef2f9; --card:#fff; --text:#16203a; --muted:#6b7a99;
+    --accent:#4f6df5; --border:#e2e8f4;
+  }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:
+      radial-gradient(900px 500px at 8% -10%, #dbe4ff 0%, transparent 60%),
+      radial-gradient(800px 500px at 100% 0%, #ffe4e6 0%, transparent 55%),
+      var(--bg);
+    color:var(--text); min-height:100vh; padding:28px 16px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto}
+
+  .hero{text-align:center;margin-bottom:22px}
+  .hero h1{
+    font-size:clamp(20px,3.4vw,30px); letter-spacing:.5px; font-weight:800;
+    background:linear-gradient(90deg,#3b5bdb,#7048e8,#0ea5e9);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero .sub{color:var(--muted);font-size:13px;margin-top:8px}
+
+  .seg{
+    display:flex;gap:6px;background:#fff;padding:6px;border-radius:14px;
+    width:max-content;margin:0 auto 18px;border:1px solid var(--border);
+    box-shadow:0 8px 24px -14px rgba(16,24,40,.35);
+  }
+  .seg-btn{
+    border:0;background:transparent;padding:9px 28px;border-radius:10px;
+    font-size:15px;font-weight:600;color:var(--muted);cursor:pointer;
+    transition:.2s;font-family:inherit;
+  }
+  .seg-btn.on{
+    background:linear-gradient(135deg,#4f6df5,#7048e8);color:#fff;
+    box-shadow:0 6px 14px -6px rgba(79,109,245,.9);
+  }
+
+  .outline{
+    background:#fff;border:1px solid var(--border);border-radius:16px;
+    margin-bottom:20px;overflow:hidden;
+    box-shadow:0 12px 30px -22px rgba(16,24,40,.5);
+  }
+  .outline-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 18px;cursor:pointer;user-select:none;transition:.15s;
+  }
+  .outline-head:hover{background:#f8fafc}
+  .outline-title{font-size:14.5px;font-weight:700;color:#334155;display:flex;align-items:center;gap:6px}
+  .outline-toggle{font-size:12px;color:var(--muted);white-space:nowrap}
+  .outline-body{
+    padding:0 18px 18px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;
+  }
+  .outline.closed .outline-body{display:none}
+
+  .block{
+    background:#f8fafc;border-radius:12px;padding:14px 16px;
+    border-left:3px solid var(--c,#4f6df5);
+  }
+  .block h4{
+    font-size:13.5px;font-weight:700;color:var(--c,#4f6df5);
+    margin-bottom:10px;
+  }
+  .step{display:flex;gap:9px;margin-bottom:9px;font-size:12.8px;line-height:1.65}
+  .step:last-child{margin-bottom:0}
+  .step .num{
+    flex:none;width:20px;height:20px;border-radius:6px;
+    background:var(--c,#4f6df5);color:#fff;font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;margin-top:2px;
+  }
+  .step .body{color:#475569;flex:1;min-width:0}
+  .step .body b{color:#1e293b;font-weight:700;display:block;margin-bottom:2px}
+  .step .body .ex{
+    display:block;margin-top:4px;padding:5px 8px;border-radius:6px;
+    background:#fff;border:1px dashed #dbe3f0;
+    font-family:Georgia,"Times New Roman",serif;font-size:12px;color:#3b5bdb;
+    word-break:break-word;
+  }
+
+  .panel{
+    background:#fff;border:1px solid var(--border);border-radius:16px;
+    padding:16px;margin-bottom:20px;
+    box-shadow:0 12px 30px -22px rgba(16,24,40,.5);
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .chip{
+    border:1px solid var(--border);background:#f8fafc;border-radius:999px;
+    padding:6px 13px;font-size:12.5px;color:#475569;cursor:pointer;
+    transition:.18s;font-family:inherit;display:inline-flex;align-items:center;gap:6px;
+  }
+  .chip b{font-weight:600;color:#a3b1c6;font-size:11px}
+  .chip:hover{border-color:var(--c,#4f6df5);color:var(--c,#4f6df5)}
+  .chip.on{background:var(--c,#4f6df5);border-color:var(--c,#4f6df5);color:#fff}
+  .chip.on b{color:rgba(255,255,255,.78)}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .search{
+    flex:1 1 200px;min-width:170px;padding:9px 14px;border-radius:10px;
+    border:1px solid var(--border);font-size:14px;outline:none;
+    font-family:inherit;background:#f8fafc;color:var(--text);transition:.18s;
+  }
+  .search:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(79,109,245,.12)}
+  .group{display:flex;background:#f1f5f9;border-radius:10px;padding:3px}
+  .g-btn{
+    border:0;background:transparent;padding:7px 12px;border-radius:8px;
+    font-size:12.5px;color:#64748b;cursor:pointer;font-family:inherit;
+    white-space:nowrap;transition:.15s;
+  }
+  .g-btn.on{background:#fff;color:var(--accent);font-weight:700;box-shadow:0 1px 3px rgba(16,24,40,.13)}
+  .btn{
+    border:1px solid var(--border);background:#fff;padding:9px 16px;
+    border-radius:10px;font-size:13.5px;font-weight:600;cursor:pointer;
+    font-family:inherit;color:#334155;transition:.18s;white-space:nowrap;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn.primary{
+    background:linear-gradient(135deg,#4f6df5,#7048e8);border:0;color:#fff;
+    box-shadow:0 8px 18px -10px rgba(79,109,245,1);
+  }
+  .btn.ghost{background:#f8fafc}
+
+  .stat{margin-top:14px;display:flex;align-items:center;gap:12px;font-size:12.5px;color:var(--muted)}
+  .bar{flex:1;height:6px;background:#eef2f9;border-radius:999px;overflow:hidden}
+  .bar i{
+    display:block;height:100%;width:0;border-radius:999px;
+    background:linear-gradient(90deg,#4f6df5,#22c55e);transition:width .35s;
+  }
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+  .card{
+    background:var(--card);border-radius:14px;padding:15px 17px 17px;
+    border:1px solid var(--border);border-left:4px solid var(--c,#4f6df5);
+    display:flex;flex-direction:column;gap:10px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px -14px rgba(16,24,40,.18);
+    transition:transform .15s,box-shadow .15s;
+  }
+  .card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 8px rgba(16,24,40,.06),0 16px 34px -18px rgba(16,24,40,.28);
+  }
+  .card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .tag{
+    font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:6px;
+    background:#f1f5f9;color:var(--c,#4f6df5);
+  }
+  .tools{display:flex;gap:2px}
+  .icon-btn{
+    border:0;background:transparent;font-size:15px;cursor:pointer;
+    padding:4px 6px;border-radius:8px;line-height:1;color:#cbd5e1;transition:.15s;
+  }
+  .icon-btn:hover{background:#f1f5f9}
+  .icon-btn.star.on{color:#f59e0b}
+  .en{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:15.5px;line-height:1.7;color:#182135;
+  }
+  .zh{font-size:13.5px;line-height:1.75;color:var(--muted)}
+  .masked{
+    filter:blur(5px);opacity:.42;cursor:pointer;user-select:none;
+    transition:filter .22s,opacity .22s;
+  }
+  .masked:hover{opacity:.62}
+  .empty{grid-column:1/-1;text-align:center;padding:70px 0;color:var(--muted);font-size:14px}
+
+  .overlay{
+    position:fixed;inset:0;background:rgba(15,23,42,.45);
+    backdrop-filter:blur(4px);display:none;align-items:center;
+    justify-content:center;padding:20px;z-index:50;
+  }
+  .overlay.show{display:flex}
+  .modal{
+    background:#fff;border-radius:18px;padding:26px;max-width:560px;width:100%;
+    position:relative;box-shadow:0 30px 60px -20px rgba(15,23,42,.55);
+    animation:pop .22s ease;display:flex;flex-direction:column;gap:16px;
+  }
+  @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+  .close{
+    position:absolute;top:14px;right:16px;border:0;background:#f1f5f9;
+    width:30px;height:30px;border-radius:50%;cursor:pointer;color:#64748b;
+    font-size:14px;line-height:1;font-family:inherit;
+  }
+  .close:hover{background:#e2e8f4}
+  .m-tag{
+    align-self:flex-start;font-size:11.5px;font-weight:700;padding:4px 10px;
+    border-radius:6px;background:#eef2ff;color:#4f6df5;
+  }
+  .m-zh{font-size:15px;line-height:1.8;color:#334155}
+  .m-en{
+    font-family:Georgia,"Times New Roman",serif;font-size:17px;line-height:1.75;
+    color:#16203a;padding:14px;border-radius:12px;background:#f8fafc;
+    border:1px dashed var(--border);
+  }
+  .m-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .m-actions .btn{flex:1;text-align:center;justify-content:center}
+  .m-actions .btn.on{color:#f59e0b;border-color:#fcd34d;background:#fffbeb}
+
+  @media (max-width:520px){
+    .seg-btn{padding:8px 18px;font-size:14px}
+    .grid{grid-template-columns:1fr}
+    .panel{padding:13px}
+    .outline-body{padding:0 12px 14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>考研英语一 · 作文功能句</h1>
+    <p class="sub">整体思路 + 功能句 + 名师押题 · 遮罩自测 · 随机抽背 · 进度本地保存</p>
+  </header>
+
+  <div class="seg" id="tabs">
+    <button class="seg-btn on" data-tab="big">大作文</button>
+    <button class="seg-btn" data-tab="small">小作文</button>
+  </div>
+
+  <section class="outline" id="outline">
+    <div class="outline-head" id="outlineHead">
+      <span class="outline-title">📝 <span id="outlineTabName">大作文</span> · 整体中文思路</span>
+      <span class="outline-toggle" id="outlineToggle">收起 ▲</span>
+    </div>
+    <div class="outline-body" id="outlineBody"></div>
+  </section>
+
+  <div class="panel">
+    <div class="chips" id="chips"></div>
+    <div class="toolbar">
+      <input id="search" class="search" placeholder="🔍 搜索中文或英文关键词…">
+      <div class="group" id="modes">
+        <button class="g-btn on" data-mode="all">全部显示</button>
+        <button class="g-btn" data-mode="zh">看中文猜英文</button>
+        <button class="g-btn" data-mode="en">看英文猜中文</button>
+      </div>
+      <div class="group" id="filters">
+        <button class="g-btn on" data-filter="all">全部</button>
+        <button class="g-btn" data-filter="todo">未掌握</button>
+        <button class="g-btn" data-filter="done">已掌握</button>
+      </div>
+      <button class="btn primary" id="randomBtn">🎲 随机抽背</button>
+    </div>
+    <div class="stat">
+      <span id="statText">已掌握 0 / 0</span>
+      <div class="bar"><i id="barFill"></i></div>
+    </div>
+  </div>
+
+  <main class="grid" id="grid"></main>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="close" id="mClose">✕</button>
+    <div class="m-tag" id="mTag"></div>
+    <p class="m-zh" id="mZh"></p>
+    <p class="m-en masked" id="mEn"></p>
+    <div class="m-actions">
+      <button class="btn primary" id="mReveal">显示英文</button>
+      <button class="btn ghost" id="mNext">换一句</button>
+      <button class="btn" id="mStar">☆ 标记已掌握</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   0. 整体中文思路框架
+   ========================================================= */
+const OUTLINE = {
+  big: {
+    blocks: [
+      {
+        name: '第一段 · 图画引入 + 图画描述 + 过渡句（3-4句）',
+        color: '#4f6df5',
+        steps: [
+          { n:'1', t:'图画引入', d:'开门见山点明“如图所示”，1句即可。',
+            ex:'As is shown above, ... / It is vividly described that ...' },
+          { n:'2', t:'图画描述', d:'一图一主体：插入结构/倒装结构/there be句型；一图两主体或两图：总述+左+衔接+右。',
+            ex:'A young student, sitting in front of a computer, is considering ... / In the middle of the picture is ...' },
+          { n:'3', t:'过渡句', d:'由画面过渡到寓意，点出图画揭示的主题或现象。',
+            ex:'Straightforward as it is, the picture conveys deep meanings.' }
+        ]
+      },
+      {
+        name: '第二段 · 引出论点 + 论证（4-5句）',
+        color: '#8b5cf6',
+        steps: [
+          { n:'1', t:'引出论点', d:'用 Obviously/Clearly 等副词引出图画揭示的现象或道理。',
+            ex:'Obviously, this drawing symbolically reveals a widespread phenomenon that ...' },
+          { n:'A', t:'因果论证', d:'用“总起句+原因1+原因2”展开，连接词清晰。',
+            ex:'Several factors could account for this phenomenon. Yet, topping the list are the following two aspects.' },
+          { n:'B', t:'论证好处', d:'用 First and foremost / Also / What\'s more 等连接词列出2-3条好处。',
+            ex:'First and foremost, this is beneficial to us in that it ...' },
+          { n:'C', t:'举例论证', d:'用一个具体人/事支撑论点，引出例子有固定模板句。',
+            ex:'Regarding this issue, I can find no more convincing example than the following one.' },
+          { n:'D', t:'调查数据', d:'引用权威机构调查数据增强说服力。',
+            ex:'According to the latest survey conducted by ..., approximately ...% of the respondents hold the view that ...' },
+          { n:'E', t:'对比论证', d:'先让步再转折，最后亮明自己观点。',
+            ex:'Some people argue that ... However, I embrace an entirely different view.' }
+        ]
+      },
+      {
+        name: '第三段 · 总结论点 + 建议措施 + 憧憬未来（3-4句）',
+        color: '#22c55e',
+        steps: [
+          { n:'1', t:'总结论点', d:'回扣主题，正面/负面/中立三种写法。',
+            ex:'From what has been discussed above, we can safely draw the conclusion that ...' },
+          { n:'2', t:'建议措施', d:'宏观（政府/媒体/学校）和微观（父母/自己）各提一句。',
+            ex:'It is necessary that the authorities concerned formulate specific policies to guide the public\'s behavior.' },
+          { n:'3', t:'憧憬未来', d:'正面用“相信……”，负面用“相信问题会解决”。',
+            ex:'We have every reason to believe that with joint efforts, we will embrace a brighter future.' }
+        ]
+      }
+    ]
+  },
+  small: {
+    blocks: [
+      {
+        name: '① 活动类 · 通用四步（邀请信 / 通知）',
+        color: '#4f6df5',
+        steps: [
+          { n:'1', t:'活动目的', d:'说明办活动的初衷，一句话点明。',
+            ex:'In order to enrich campus life, the Students\u2019 Union is going to hold ...' },
+          { n:'2', t:'时间地点', d:'固定句型 ... will be held in ... on ...，不要展开。',
+            ex:'It will be held in the school auditorium on December 20th.' },
+          { n:'3', t:'内容过程', d:'写致辞人、参与者要求、奖项等通用内容，不要自创情节。',
+            ex:'Professor Zhang will give an address at the beginning. All participants are required to ...' },
+          { n:'4', t:'套话结尾', d:'欢迎参加 + 附件/联系方式，标准收尾。',
+            ex:'You are welcome to attend this event. Relevant arrangements are attached for your reference.' }
+        ]
+      },
+      {
+        name: '② 建议类 · 三段式',
+        color: '#22c55e',
+        steps: [
+          { n:'1', t:'写信目的', d:'说明自己身份，点明“就某事提建议”。',
+            ex:'I am writing to give you some suggestions regarding ...' },
+          { n:'2', t:'建议内容', d:'In the first place / What is more / Finally 各带一条建议，条理清晰。',
+            ex:'In my humble opinion, you would be wise to take the following actions.' },
+          { n:'3', t:'结尾套话', d:'希望建议有用 + 愿意进一步讨论 + 祝福。',
+            ex:'I hope you will find these proposals useful, and I would be ready to discuss this matter with you.' }
+        ]
+      },
+      {
+        name: '③ 理由类 · 道歉信',
+        color: '#a855f7',
+        steps: [
+          { n:'1', t:'写信目的', d:'开门见山表达歉意。',
+            ex:'I am writing to express my sincere apology to you.' },
+          { n:'2', t:'缘由 + 后果', d:'交代事情经过，说明给对方造成的不便。',
+            ex:'To begin with, ... Unfortunately, ... I know my carelessness has brought you great inconvenience.' },
+          { n:'3', t:'弥补措施', d:'提出具体补救办法，体现诚意。',
+            ex:'To solve this problem, I would like to ... to make up for my mistake.' },
+          { n:'4', t:'结尾套话', d:'请对方接受道歉 + 感谢理解 + 随时联系。',
+            ex:'Please accept my apology and thank you for your understanding.' }
+        ]
+      },
+      {
+        name: '④ 理由类 · 推荐信（押题重点）',
+        color: '#06b6d4',
+        steps: [
+          { n:'1', t:'写信目的', d:'表达推荐意愿，点明推荐的书/电影/戏剧。',
+            ex:'It is my great privilege to recommend ... as the right choice for your consideration.' },
+          { n:'2', t:'推荐理由', d:'从语言、内容、情节、主人公、启发五个角度展开。',
+            ex:'The primary reasons for this recommendation are as follows. Firstly, ... Secondly, ...' },
+          { n:'3', t:'结尾套话', d:'希望信息有帮助 + 随时联系。',
+            ex:'I do hope the above information will help you to understand ... more clearly.' }
+        ]
+      }
+    ]
+  }
+};
+
+/* =========================================================
+   1. 功能句数据库
+   ========================================================= */
+const DATA = {
+  big: {
+    label: '大作文',
+    cats: [
+      { id:'intro',      name:'图画引入',  color:'#4f6df5' },
+      { id:'desc',       name:'图画描述',  color:'#8b5cf6' },
+      { id:'chart',      name:'图表描述',  color:'#0ea5e9' },
+      { id:'transition', name:'过渡与论点',color:'#14b8a6' },
+      { id:'cause',      name:'因果论证',  color:'#f59e0b' },
+      { id:'benefit',    name:'论证好处',  color:'#ef4444' },
+      { id:'example',    name:'举例论证',  color:'#22c55e' },
+      { id:'data',       name:'数据与对比',color:'#f97316' },
+      { id:'hot',        name:'押题·大作文主题',color:'#ec4899' },
+      { id:'conclusion', name:'总结与建议',color:'#a855f7' }
+    ],
+    items: [
+      { c:'intro', en:'As is shown above, ...', zh:'如上图所示，……' },
+      { c:'intro', en:'It is vividly/graphically described/portrayed/depicted that ...', zh:'图中生动地/形象地描述/描绘/刻画了……' },
+      { c:'intro', en:'Simple as the drawing is, the symbolic meaning behind it is far-reaching.', zh:'图画虽简单，其背后的象征意义却十分深远。' },
+      { c:'intro', en:'As can be seen from the picture, it is intended to highlight the critical role that 主题 plays in modern society.', zh:'从图中可以看出，它意在强调主题在现代社会中所起的关键作用。' },
+      { c:'desc', en:`A young student, sitting in front of a computer with a course selection system on it, is considering whether to choose courses with new knowledge, great difficulty and emphasis on innovation or to choose courses that are easy to pass with high scores and little homework.`, zh:'一位年轻学生坐在电脑前，电脑上显示着选课系统，他正在考虑是选择知识新、难度大、注重创新的课程，还是选择容易通过、高分且作业少的课程。' },
+      { c:'desc', en:'In the middle of the picture is a lovely American girl wearing traditional Chinese costume with a sweet smile on her face.', zh:'画面中央是一位可爱的美国女孩，身着中国传统服饰，脸上带着甜甜的微笑。' },
+      { c:'desc', en:'There is a man on a football field, preparing to shoot at the goal defended by a goalkeeper, with an image in his mind in which the huge goalkeeper seems to fill the entire goal.', zh:'足球场上有一位男士，正准备射向守门员把守的球门，他脑海中浮现出一幅画面：巨大的守门员似乎填满了整个球门。' },
+      { c:'desc', en:'In the picture above are two students standing in front of a bulletin board with a poster of a campus lecture on it.', zh:'上图中有两名学生站在公告栏前，公告栏上贴着一张校园讲座的海报。' },
+      { c:'desc', en:`Wearing a black hat, the girl on the left says, "The lecture is irrelevant to our major, so it is useless to attend it." By contrast, the student on the right replies confidently, "It will definitely be useful if we attend the lecture."`, zh:'左边戴黑帽的女孩说：“这个讲座和我们的专业无关，去听也没多大用。”相比之下，右边的学生自信地回答道：“我们去听讲座肯定会有好处。”' },
+      { c:'desc', en:`In the pictures above are a father and his beloved son. In the left/first cartoon, watching a football match on TV with a cigarette in his hand, the father shouts to his son, "Son, study hard for me!" By contrast, in the right/second picture, at 9 p.m., the father is studying together with his son, both totally absorbed in their books.`, zh:'上图中有父子二人。左图中，父亲手拿香烟看着电视上的足球赛，冲儿子喊道：“儿子，给我好好学习！”相比之下，右图中，晚上9点，父亲和儿子一起学习，两人都全神贯注于书本。' },
+      { c:'desc', en:'The caption below the picture reads, "..."', zh:'图片下方的文字说明写道：“……”' },
+      { c:'desc', en:'Below the drawing is a subtitle that says, "..."', zh:'图画下方有一行副标题写道：“……”' },
+      { c:'chart', en:'The table/bar chart/pie chart/line chart illustrates/shows...', zh:'该表格/柱状图/饼状图/曲线图展示/显示了……' },
+      { c:'chart', en:'It can be seen that the number of 变量A increased dramatically from 数字 in 时间 to 数字 in 时间, while that of 变量B decreased significantly from 数字 to 数字 during the same period.', zh:'可以看出，变量A的数量从某年的某数字急剧增长到某年的某数字，而变量B的数量在同一时期从某数字显著下降到某数字。' },
+      { c:'chart', en:'It can be seen that 因素A accounts for the largest share, with a proportion of 36.3%, followed by 因素B and 因素C, which take up 27.4% and 24.3% respectively.', zh:'可以看出，因素A占比最大，为36.3%，其次是因素B和因素C，分别占27.4%和24.3%。' },
+      { c:'chart', en:'The table illustrates the average possession of major durable consumer goods per hundred households at the end of the year nationwide in recent years.', zh:'该表格展示了近年来全国每百户家庭年末主要耐用消费品的平均拥有量。' },
+      { c:'transition', en:'Straightforward/simple as it is, the picture conveys deep meanings.', zh:'图画虽然简单直白，却传达了深刻的含义。' },
+      { c:'transition', en:'As can be seen from the picture, it is intended to highlight the critical role that 主题 plays in modern society.', zh:'从图中可以看出，它意在强调主题在现代社会中所起的关键作用。' },
+      { c:'transition', en:'Obviously/Evidently/Clearly, this drawing symbolically/metaphorically/ironically reveals/demonstrates/manifests/unveils/reflects a widespread/common phenomenon / a permanent truth / a widely-recognized fact that...', zh:'显然，这幅画象征性地/隐喻地/讽刺性地揭示/展示/表明/揭露/反映了一个普遍/常见的现象 / 一个永恒的真理 / 一个广泛认可的事实，即……' },
+      { c:'cause', en:'What exactly contributes to this phenomenon? It is a thought-provoking question.', zh:'究竟是什么导致了这种现象？这是一个发人深省的问题。' },
+      { c:'cause', en:'Several factors could account for this phenomenon. Yet, topping the list are the following two aspects.', zh:'一些因素可以解释这一现象。然而，最重要的是以下两个方面。' },
+      { c:'cause', en:'The following reasons can account for this phenomenon.', zh:'以下原因可以解释这一现象。' },
+      { c:'cause', en:'First/Firstly, with the _____, people/undergraduates in mounting numbers begin to _____, laying emphasis on sth./doing sth.', zh:'首先，随着……，越来越多的人/大学生开始……，强调某事/做某事。' },
+      { c:'cause', en:'Second/Besides, _____ also proves responsible for this phenomenon in that people can _____, which exerts significant influence on their behavior.', zh:'其次/此外，……也被证明是造成这种现象的原因，因为人们可以……，这对他们的行为产生了重大影响。' },
+      { c:'cause', en:`Third/Last but not least, the positive guidance of the government policies / the subtle influence of the mass media is another key factor that can't be ignored.`, zh:'第三/最后但同样重要的是，政府政策的积极引导 / 大众传媒的潜移默化的影响是另一个不可忽视的关键因素。' },
+      { c:'cause', en:'That a majority of people begin to attach importance to ... is mainly due to the fact that...', zh:'大多数人开始重视……，主要是因为……' },
+      { c:'benefit', en:'First and foremost, this is beneficial to us in that it...', zh:'首先，这对我们有益，因为它……' },
+      { c:'benefit', en:'Also, by doing ..., people/students are able to do...', zh:'此外，通过做……，人们/学生们能够……' },
+      { c:'benefit', en:`What's more, sth./doing sth. enables us/students to do...`, zh:'此外，某事/做某事使我们/学生们能够……' },
+      { c:'benefit', en:'Last but not least, sth./doing sth. can help us/students do...', zh:'最后但同样重要的是，某事/做某事可以帮助我们/学生们……' },
+      { c:'benefit', en:'sth. exerts a favorable influence on...', zh:'某事对……产生有利影响。' },
+      { c:'benefit', en:'sth./doing sth. contributes a great deal to the improvement of...', zh:'某事/做某事对……的改善贡献很大。' },
+      { c:'benefit', en:'sth./doing sth. is conducive to the development of...', zh:'某事/做某事有助于……的发展。' },
+      { c:'benefit', en:'sth. provides us with a golden chance to...', zh:'某事为我们提供了一个做……的绝佳机会。' },
+      { c:'example', en:'Among all the memorable examples related to this topic which I have ever observed, heard and experienced, the following one is the most persuasive.', zh:'在我所见、所闻、所经历的所有和这一问题相关的难忘例子中，最有说服力的是下面这个。' },
+      { c:'example', en:'Regarding this issue, I can find no more convincing example than the following one.', zh:'关于这个问题，我找不到比下面这个更令人信服的例子了。' },
+      { c:'example', en:'Concerning this issue, numerous instances can be provided, but the following one suffices.', zh:'关于这个问题，可以给出很多例子，但下面这个就足够了。' },
+      { c:'example', en:'At this very moment, a renowned person pops into my mind — 某人，who/which+做了某事.', zh:'此时此刻，我脑海中浮现出一位知名人物——某人，他/她做了某事。' },
+      { c:'example', en:'For example/For instance/Take my cousin as an example,...', zh:'例如/比如/以我表弟为例，……' },
+      { c:'data', en:'According to the latest survey conducted by the relevant national authority, approximately/roughly/around ...% of the respondents hold the view that...', zh:'根据国家相关权威机构开展的最新调查，大约……%的受访者认为……' },
+      { c:'data', en:'When it comes to 主题, views/opinions/standpoints may vary from person to person.', zh:'谈到主题，观点/意见/立场可能因人而异。' },
+      { c:'data', en:'Some people argue that... However, I embrace an entirely different view.', zh:'有些人认为……然而，我持完全不同的观点。' },
+      { c:'data', en:'From my perspective/For my part, the merits of ... outweigh its demerits.', zh:'在我看来/就我而言，……的优点大于缺点。' },
+      /* ===== 押题·大作文主题 ===== */
+      { c:'hot', en:'In an era marked by rapid digitalization and globalization, the discourse on traditional culture has shifted from mere preservation to dynamic innovation.', zh:'在一个以快速数字化和全球化为标志的时代，关于传统文化的讨论已从单纯的保护转向动态创新。' },
+      { c:'hot', en:'Traditional culture, such as Peking Opera, shadow puppetry and calligraphy, can be revitalized through short videos, creative cultural products and digital museums.', zh:'传统文化，如京剧、皮影戏和书法，可以通过短视频、文创产品和数字博物馆焕发新生。' },
+      { c:'hot', en:'The integration of technology and traditional arts not only preserves cultural heritage but also makes it more accessible to the younger generation.', zh:'科技与传统艺术的融合不仅保护了文化遗产，还使其更容易被年轻一代接受。' },
+      { c:'hot', en:'While artificial intelligence brings unprecedented convenience, it also raises ethical concerns regarding privacy, fairness and human responsibility.', zh:'虽然人工智能带来了前所未有的便利，但也引发了关于隐私、公平和人类责任的伦理担忧。' },
+      { c:'hot', en:'It is essential to strike a balance between technological advancement and humanistic care.', zh:'在技术进步与人文关怀之间取得平衡至关重要。' },
+      { c:'hot', en:'Green living, characterized by low-carbon transportation, waste sorting and energy conservation, reflects the concept of sustainable development.', zh:'以低碳出行、垃圾分类和节能为特征的绿色生活，反映了可持续发展的理念。' },
+      { c:'hot', en:'Only by integrating environmental awareness into our daily routines can we build a resource-efficient and eco-friendly society.', zh:'只有将环保意识融入日常生活，我们才能建设一个资源节约型、环境友好型社会。' },
+      { c:'hot', en:'Cultural confidence serves as a solid foundation for a nation\u2019s prosperity and plays an indispensable role in enhancing soft power.', zh:'文化自信是一个国家繁荣的坚实基础，在增强软实力方面发挥着不可或缺的作用。' },
+      { c:'conclusion', en:'From the preceding discussion, it is readily apparent that...', zh:'从上述讨论中，显而易见的是……' },
+      { c:'conclusion', en:'From what has been discussed above, we can safely draw the conclusion that...', zh:'综上所述，我们可以有把握地得出结论：……' },
+      { c:'conclusion', en:'The 主题 exerts positive effects and helps people embrace a promising future.', zh:'主题产生积极影响，帮助人们拥抱光明的未来。' },
+      { c:'conclusion', en:'Fortunately, it is not a dead end/a desperate situation, and we still have time to remedy the problem.', zh:'幸运的是，这并非绝境，我们仍有时间补救这个问题。' },
+      { c:'conclusion', en:'Every coin has two sides, 主题 is no exception.', zh:'凡事都有两面性，主题也不例外。' },
+      { c:'conclusion', en:`It is necessary that the authorities concerned/the government formulate specific policies to guide the public's behavior.`, zh:'有必要让有关部门/政府制定具体政策来引导公众行为。' },
+      { c:'conclusion', en:'For one thing, it is advisable that mass media make every effort to do sth.', zh:'一方面，大众传媒应尽一切努力做某事，这是明智的。' },
+      { c:'conclusion', en:'People ought to raise their awareness of developing or correcting relevant behaviors concerning the 主题.', zh:'人们应当提高对培养或纠正与主题相关行为的意识。' },
+      { c:'conclusion', en:`It is high time that we raised people's awareness of tackling this problem by doing sth.`, zh:'该是我们通过做某事来提高人们解决这一问题意识的时候了。' },
+      { c:'conclusion', en:'We have every reason to believe that with joint efforts, we will attain greater achievements and embrace a brighter future.', zh:'我们完全有理由相信，通过共同努力，我们将取得更大成就，拥抱更光明的未来。' },
+      { c:'conclusion', en:'Only by making constant efforts and never stopping making progress can we attain outstanding accomplishments and realize our dreams.', zh:'只有不断努力、永不止步，我们才能取得卓越成就、实现梦想。' },
+      { c:'conclusion', en:'With these timely and effective measures taken, we have every reason to believe that this problem will be properly addressed in the near future.', zh:'有了这些及时有效的措施，我们完全有理由相信这个问题将在不久的将来得到妥善解决。' }
+    ]
+  },
+
+  small: {
+    label: '小作文',
+    cats: [
+      { id:'aim',      name:'活动目的',   color:'#4f6df5' },
+      { id:'time',     name:'时间地点',   color:'#8b5cf6' },
+      { id:'process',  name:'内容流程',   color:'#0ea5e9' },
+      { id:'farewell', name:'套话结尾',   color:'#14b8a6' },
+      { id:'invite',   name:'邀请信',     color:'#f59e0b' },
+      { id:'notice',   name:'告示/通知',  color:'#ef4444' },
+      { id:'advice',   name:'建议类',     color:'#22c55e' },
+      { id:'reason',   name:'理由/好处',  color:'#f97316' },
+      { id:'apology',  name:'道歉信',     color:'#a855f7' },
+      { id:'recommend',name:'推荐信',     color:'#06b6d4' },
+      { id:'hot',      name:'押题·推荐信',color:'#ec4899' }
+    ],
+    items: [
+      { c:'aim', en:'In order to enrich campus life and help students relax, the Students\u2019 Union is going to hold a singing contest.', zh:'为了丰富校园生活、帮助同学们放松，学生会将举办一场歌唱比赛。' },
+      { c:'aim', en:'The activity aims to / aims at helping students relieve pressure and broaden their horizons.', zh:'该活动旨在帮助同学们缓解压力、开阔视野。' },
+      { c:'aim', en:'The project is designed to enhance students\u2019 awareness of environmental protection.', zh:'该项目旨在增强学生们的环保意识。' },
+      { c:'aim', en:'The purpose of this activity is to promote cultural exchange between Chinese and foreign students.', zh:'本次活动的目的是促进中外学生之间的文化交流。' },
+      { c:'aim', en:'Our university is going to organize a graduation ceremony.', zh:'我们学校将组织一场毕业典礼。' },
+      { c:'aim', en:'We are planning to recruit several volunteers for this event.', zh:'我们计划为此次活动招募数名志愿者。' },
+      { c:'time', en:'The meeting will be held in the school auditorium on December 20th.', zh:'会议将于12月20日在学校礼堂举行。' },
+      { c:'time', en:'There will be a lecture related to Chinese traditional culture this Sunday in the Student\u2019s Center.', zh:'本周日将在学生活动中心举办一场与中国传统文化相关的讲座。' },
+      { c:'time', en:'It will be held from 8 p.m. to 10 p.m. next Sunday in the school auditorium.', zh:'活动将于下周日晚上8点至10点在学校礼堂举行。' },
+      { c:'time', en:'An international conference on globalization will be held on October 1st at our school.', zh:'一场关于全球化的国际会议将于10月1日在我校举行。' },
+      { c:'process', en:'The relevant procedures and arrangements for this activity are as follows.', zh:'本次活动的相关流程和安排如下。' },
+      { c:'process', en:'Firstly, this activity will focus on the theme of environmental protection. Moreover, Professor Zhang will give an address at the beginning. Last but not least, all the participants and the audience are required to keep quiet during the whole event.', zh:'首先，本次活动将围绕环保主题展开。此外，张教授将在开始时致辞。最后但同样重要的是，所有参与者和观众在整个活动期间需保持安静。' },
+      { c:'process', en:'The president of our university will give an address at the beginning.', zh:'我们校长将在活动开始时致辞。' },
+      { c:'process', en:'Professional judges in the music field will be invited.', zh:'将邀请音乐领域的专业评委。' },
+      { c:'process', en:'There are generous awards for the top 10 winners.', zh:'前10名优胜者将获得丰厚的奖品。' },
+      { c:'process', en:'Volunteers should be proficient in spoken English. Other requirements include good communication skills and a sense of responsibility for their work.', zh:'志愿者应能熟练使用英语口语。其他要求包括良好的沟通能力和对工作的责任心。' },
+      { c:'process', en:'Priority will be given to those who are experienced in international conferences and who are familiar with Chinese culture.', zh:'有国际会议经验、熟悉中国文化者优先。' },
+      { c:'farewell', en:'You are welcome to share your ideas / attend this meeting / attend this event.', zh:'欢迎您分享想法 / 参加本次会议 / 参加本次活动。' },
+      { c:'farewell', en:'Relevant arrangements are attached for your reference.', zh:'相关安排随信附上，供您参考。' },
+      { c:'farewell', en:'We sincerely welcome you to attend this event at your convenience.', zh:'我们诚挚欢迎您在方便时参加本次活动。' },
+      { c:'farewell', en:'Please contact us no later than December 20th.', zh:'请在12月20日之前与我们联系。' },
+      { c:'farewell', en:'If you are interested in this activity, please send your application to xxx@123.com.', zh:'如果您对本次活动感兴趣，请将申请发送至 xxx@123.com。' },
+      { c:'farewell', en:'If you have any further questions concerning this activity, feel free to contact us.', zh:'如对本次活动有任何疑问，请随时与我们联系。' },
+      { c:'invite', en:'It is my great pleasure to invite you to visit / attend and give a lecture.', zh:'非常荣幸邀请您来访 / 出席并做讲座。' },
+      { c:'invite', en:'I\u2019m writing to invite you to attend this important event.', zh:'我写信是想邀请您参加这个重要的活动。' },
+      { c:'invite', en:'As one of the most privileged experts in this field, your attendance will give us unparalleled honor.', zh:'作为该领域最权威的专家之一，您的出席将给我们带来无上的荣幸。' },
+      { c:'invite', en:'I indeed hope that you can come to enjoy and offer your valuable advice.', zh:'我真诚希望您能前来享受活动并给予宝贵建议。' },
+      { c:'invite', en:'I would be grateful if you could accept my invitation. I\u2019m looking forward to your reply.', zh:'如果您能接受我的邀请，我将不胜感激。期待您的回复。' },
+      { c:'invite', en:'Please let me know if you can come and send me your reply before December 15th.', zh:'请告知您是否能来，并在12月15日之前回复我。' },
+      { c:'notice', en:'Notice', zh:'通知（告示标题）' },
+      { c:'notice', en:'This is to notify that a lecture on Chinese traditional culture will be held in the lecture hall at 3 p.m. on June 15th.', zh:'特此通知：一场关于中国传统文化的讲座将于6月15日下午3点在报告厅举行。' },
+      { c:'notice', en:'We are planning to recruit several volunteers for this event. The requirements are as follows.', zh:'我们计划为本次活动招募数名志愿者。要求如下。' },
+      { c:'notice', en:'The Students\u2019 Union December 20th, 2026', zh:'学生会 2026年12月20日（告示落款格式）' },
+      { c:'advice', en:'I am writing to give you some suggestions regarding sth.', zh:'我写信是想就某事给你一些建议。' },
+      { c:'advice', en:'In my humble opinion, you would be wise to take the following actions.', zh:'依我拙见，你最好采取以下行动。' },
+      { c:'advice', en:'In the first place, ... What is more, ... Finally, ...', zh:'首先，…… 此外，…… 最后，……（建议信三段式连接词）' },
+      { c:'advice', en:'You should / ought to / are supposed to / are expected to ... / You\u2019d better do sth.', zh:'你应该 / 应当 / 被期望…… / 你最好做某事。' },
+      { c:'advice', en:'It is important / vital that sb. (should) do sth.', zh:'某人做某事很重要 / 至关重要。' },
+      { c:'advice', en:'It is important / necessary / advisable to do ... / It is a good idea to do ...', zh:'做某事很重要 / 有必要 / 明智 / 是个好主意。' },
+      { c:'advice', en:'You can ... if you ... / You would be wise to do sth.', zh:'如果……你可以…… / 你做某事是明智的。' },
+      { c:'advice', en:'I will be grateful if you could take my suggestions seriously. I hope you will find them helpful and practical.', zh:'如果您能认真考虑我的建议，我将不胜感激。希望您觉得这些建议有帮助且实用。' },
+      { c:'reason', en:'This is beneficial to us in that it helps us improve our interpersonal skills.', zh:'这对我们有益，因为它帮助我们提高人际交往能力。' },
+      { c:'reason', en:'By doing exercise every day, students are able to keep fit and relieve pressure.', zh:'通过每天锻炼，学生们能够保持健康、缓解压力。' },
+      { c:'reason', en:'Reading enables us to broaden our horizons and enrich our knowledge.', zh:'阅读使我们能够开阔视野、丰富知识。' },
+      { c:'reason', en:'Taking part in social activities can help us make more friends and expand our social circle.', zh:'参加社会活动能帮助我们结交更多朋友、扩大社交圈。' },
+      { c:'reason', en:'Traveling affords us an opportunity to experience different cultures.', zh:'旅行给我们提供了一个体验不同文化的机会。' },
+      { c:'reason', en:'Doing sports contributes greatly to our physical and mental health.', zh:'运动对我们的身心健康大有益处。' },
+      { c:'apology', en:'I am writing to express my sincere apology to you.', zh:'我写信是为了向你表达诚挚的歉意。' },
+      { c:'apology', en:'The details are provided as follows. To begin with, ... Unfortunately, ...', zh:'详情如下。首先，…… 不幸的是，……' },
+      { c:'apology', en:'I know my carelessness has brought you great inconvenience.', zh:'我知道我的粗心给你带来了很大的不便。' },
+      { c:'apology', en:'Without my carelessness, you would not have been put to great inconvenience.', zh:'要不是我的粗心，你也不会陷入这么大的不便。' },
+      { c:'apology', en:'To solve this problem, I would like to do sth. to make up for my mistake.', zh:'为了解决这个问题，我愿意做某事来弥补我的过错。' },
+      { c:'apology', en:'Please accept my apology and thank you for your understanding.', zh:'请接受我的道歉，感谢你的理解。' },
+      { c:'recommend', en:'It is my great privilege to recommend ... as the right choice for your consideration.', zh:'我非常荣幸地推荐……作为您的合适选择。' },
+      { c:'recommend', en:'The primary reasons for this recommendation are as follows.', zh:'推荐的主要理由如下。' },
+      { c:'recommend', en:'Firstly, it is one of the most fantastic books / films / tourist attractions that have attracted millions of readers / viewers / travelers.', zh:'首先，它是最精彩的书籍 / 电影 / 旅游景点之一，吸引了数百万读者 / 观众 / 游客。' },
+      { c:'recommend', en:'She / He is one of the most competent and visionary persons I have ever seen.', zh:'她 / 他是我见过的最有能力、最有远见的人之一。' },
+      { c:'recommend', en:'I do hope the above information will help you to understand ... more clearly.', zh:'我真心希望以上信息能帮助您更清楚地了解……' },
+      { c:'recommend', en:'Please feel free to contact me if you have any further questions.', zh:'如有任何其他问题，请随时与我联系。' },
+      /* ===== 押题·推荐信（书/电影/戏剧） ===== */
+      { c:'hot', en:'I am quite delighted to receive your last letter in which you asked me to share a book / movie / play with you.', zh:'很高兴收到你的上一封来信，你在信中提到想让我和你分享一本书/一部电影/一部戏剧。' },
+      { c:'hot', en:'After careful consideration and deliberation, it is with great passion that I am writing this letter to recommend one of my favorite books, Journey to the West, as your proper choice.', zh:'经过仔细考虑和斟酌，我非常热情地写这封信向你推荐我最喜欢的书之一《西游记》，作为你的合适选择。' },
+      { c:'hot', en:'The reasons for my recommendation can be listed as follows.', zh:'我推荐的理由可以列举如下。' },
+      { c:'hot', en:'Generally speaking, this masterpiece is a must-read for bookworms, written by Wu Cheng\u2019en and winning widespread acclaim across generations.', zh:'总的来说，这部杰作是书虫们的必读之作，由吴承恩所著，赢得了世世代代的广泛赞誉。' },
+      { c:'hot', en:'Firstly, the language of the book is vivid, clear and easy to understand, which is very helpful to improve your Chinese reading ability.', zh:'首先，这本书的语言生动、清晰、易于理解，对提高你的中文阅读能力很有帮助。' },
+      { c:'hot', en:'Additionally, the content is based on Chinese mythology and Buddhist legends, and the plot is very touching, gripping and entertaining, which tells a magic story of Tang Monk and his three disciples who travel west to obtain sacred scriptures.', zh:'此外，该书内容基于中国神话和佛教传说，情节非常感人、扣人心弦且引人入胜，讲述了唐僧和他的三个徒弟西行取经的神奇故事。' },
+      { c:'hot', en:'Most importantly, it can give us spiritual enlightenment on how to persevere in the face of difficulties and how to cooperate with others.', zh:'最重要的是，它能在如何面对困难坚持不懈、如何与他人合作方面给我们精神上的启迪。' },
+      { c:'hot', en:'In short, I have no hesitation in recommending this great work and I am looking forward to your review / remark / comment of it.', zh:'简而言之，我毫不犹豫地推荐这部伟大作品，期待你的书评/评论/反馈。' },
+      { c:'hot', en:'I strongly recommend that you watch the movie / play ... which is not only entertaining but also thought-provoking.', zh:'我强烈推荐你看这部电影/戏剧……它不仅具有娱乐性，而且发人深省。' },
+      { c:'hot', en:'What impresses me most is its distinctive characters and the profound theme it conveys.', zh:'最令我印象深刻的是它鲜明的人物形象和所传达的深刻主题。' }
+    ]
+  }
+};
+
+/* =========================================================
+   2. 状态与存储
+   ========================================================= */
+const STORAGE_KEY = 'kaoyan_essay_sentences_v5';
+let mastered = new Set();
+try {
+  mastered = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+} catch (e) { mastered = new Set(); }
+
+const state = { tab: 'big', cat: 'all', mode: 'all', filter: 'all', q: '' };
+const revealed = new Set();
+let modalItem = null;
+let outlineOpen = true;
+
+const $grid    = document.getElementById('grid');
+const $chips   = document.getElementById('chips');
+const $overlay = document.getElementById('overlay');
+
+/* =========================================================
+   3. 工具函数
+   ========================================================= */
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+  ));
+}
+function saveMastered() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...mastered]));
+}
+function itemsOf(tab) {
+  return DATA[tab].items.map((it, i) => ({ ...it, id: tab + '-' + i }));
+}
+function catOf(tab, cid) {
+  return DATA[tab].cats.find(c => c.id === cid) || { name: '', color: '#4f6df5' };
+}
+function filtered() {
+  const q = state.q.trim().toLowerCase();
+  return itemsOf(state.tab).filter(it => {
+    if (state.cat !== 'all' && it.c !== state.cat) return false;
+    if (state.filter === 'todo' && mastered.has(it.id)) return false;
+    if (state.filter === 'done' && !mastered.has(it.id)) return false;
+    if (q && !(it.en.toLowerCase().includes(q) || it.zh.includes(state.q.trim()))) return false;
+    return true;
+  });
+}
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.9;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+/* =========================================================
+   4. 思路框架渲染
+   ========================================================= */
+function renderOutline() {
+  document.getElementById('outlineTabName').textContent = DATA[state.tab].label;
+  const body = document.getElementById('outlineBody');
+  body.innerHTML = OUTLINE[state.tab].blocks.map(b => `
+    <div class="block" style="--c:${b.color}">
+      <h4>${esc(b.name)}</h4>
+      ${b.steps.map(s => `
+        <div class="step">
+          <span class="num">${esc(s.n)}</span>
+          <span class="body">
+            <b>${esc(s.t)}</b>
+            ${esc(s.d)}
+            ${s.ex ? `<span class="ex">${esc(s.ex)}</span>` : ''}
+          </span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+document.getElementById('outlineHead').addEventListener('click', () => {
+  outlineOpen = !outlineOpen;
+  document.getElementById('outline').classList.toggle('closed', !outlineOpen);
+  document.getElementById('outlineToggle').textContent = outlineOpen ? '收起 ▲' : '展开 ▼';
+});
+
+/* =========================================================
+   5. 卡片渲染
+   ========================================================= */
+function cardHTML(it) {
+  const cat  = catOf(state.tab, it.c);
+  const done = mastered.has(it.id);
+  const maskEn = state.mode === 'zh' && !revealed.has(it.id + ':en');
+  const maskZh = state.mode === 'en' && !revealed.has(it.id + ':zh');
+
+  return `
+  <article class="card" style="--c:${cat.color}">
+    <div class="card-top">
+      <span class="tag">${esc(cat.name)}</span>
+      <div class="tools">
+        <button class="icon-btn" data-speak="${esc(it.en)}" title="朗读英文">🔊</button>
+        <button class="icon-btn star ${done ? 'on' : ''}" data-star="${it.id}"
+                title="${done ? '取消已掌握' : '标记为已掌握'}">${done ? '★' : '☆'}</button>
+      </div>
+    </div>
+    <p class="en ${maskEn ? 'masked' : ''}" data-id="${it.id}" data-field="en">${esc(it.en)}</p>
+    <p class="zh ${maskZh ? 'masked' : ''}" data-id="${it.id}" data-field="zh">${esc(it.zh)}</p>
+  </article>`;
+}
+
+function renderChips() {
+  const all = itemsOf(state.tab);
+  let html = `<button class="chip ${state.cat === 'all' ? 'on' : ''}" data-cat="all"
+              style="--c:#64748b">全部 <b>${all.length}</b></button>`;
+  DATA[state.tab].cats.forEach(c => {
+    const n = all.filter(i => i.c === c.id).length;
+    html += `<button class="chip ${state.cat === c.id ? 'on' : ''}" data-cat="${c.id}"
+             style="--c:${c.color}">${esc(c.name)} <b>${n}</b></button>`;
+  });
+  $chips.innerHTML = html;
+}
+
+function updateStats() {
+  const all  = itemsOf(state.tab);
+  const done = all.filter(i => mastered.has(i.id)).length;
+  document.getElementById('statText').textContent = `已掌握 ${done} / ${all.length}`;
+  document.getElementById('barFill').style.width = (all.length ? (done / all.length * 100) : 0) + '%';
+}
+
+function render() {
+  const list = filtered();
+  $grid.innerHTML = list.length
+    ? list.map(cardHTML).join('')
+    : '<div class="empty">没有符合条件的句子，换个筛选条件试试～</div>';
+  renderChips();
+  updateStats();
+}
+
+/* =========================================================
+   6. 事件绑定
+   ========================================================= */
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('[data-tab]');
+  if (!b) return;
+  state.tab = b.dataset.tab;
+  state.cat = 'all';
+  revealed.clear();
+  document.querySelectorAll('#tabs .seg-btn').forEach(x => x.classList.toggle('on', x === b));
+  renderOutline();
+  render();
+});
+
+$chips.addEventListener('click', e => {
+  const b = e.target.closest('[data-cat]');
+  if (!b) return;
+  state.cat = b.dataset.cat;
+  render();
+});
+
+document.getElementById('modes').addEventListener('click', e => {
+  const b = e.target.closest('[data-mode]');
+  if (!b) return;
+  state.mode = b.dataset.mode;
+  revealed.clear();
+  document.querySelectorAll('#modes .g-btn').forEach(x => x.classList.toggle('on', x === b));
+  render();
+});
+
+document.getElementById('filters').addEventListener('click', e => {
+  const b = e.target.closest('[data-filter]');
+  if (!b) return;
+  state.filter = b.dataset.filter;
+  document.querySelectorAll('#filters .g-btn').forEach(x => x.classList.toggle('on', x === b));
+  render();
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  state.q = e.target.value;
+  render();
+});
+
+$grid.addEventListener('click', e => {
+  const maskEl = e.target.closest('[data-field]');
+  if (maskEl && maskEl.classList.contains('masked')) {
+    const id = maskEl.dataset.id, field = maskEl.dataset.field;
+    revealed.add(id + ':' + field);
+    maskEl.classList.remove('masked');
+    return;
+  }
+  const star = e.target.closest('[data-star]');
+  if (star) {
+    const id = star.dataset.star;
+    mastered.has(id) ? mastered.delete(id) : mastered.add(id);
+    saveMastered();
+    render();
+    return;
+  }
+  const spk = e.target.closest('[data-speak]');
+  if (spk) speak(spk.dataset.speak);
+});
+
+/* =========================================================
+   7. 随机抽背
+   ========================================================= */
+function openRandom() {
+  const list = filtered();
+  if (!list.length) { alert('当前筛选条件下没有句子～'); return; }
+  let pool = list;
+  if (list.length > 1 && modalItem) {
+    const p = list.filter(i => i.id !== modalItem.id);
+    if (p.length) pool = p;
+  }
+  modalItem = pool[Math.floor(Math.random() * pool.length)];
+  renderModal();
+  $overlay.classList.add('show');
+}
+
+function renderModal() {
+  const cat = catOf(state.tab, modalItem.c);
+  document.getElementById('mTag').textContent = '随机抽背 · ' + cat.name;
+  document.getElementById('mZh').textContent = modalItem.zh;
+  const en = document.getElementById('mEn');
+  en.textContent = modalItem.en;
+  en.classList.add('masked');
+  document.getElementById('mReveal').textContent = '显示英文';
+  const star = document.getElementById('mStar');
+  const done = mastered.has(modalItem.id);
+  star.textContent = done ? '★ 已掌握' : '☆ 标记已掌握';
+  star.classList.toggle('on', done);
+}
+
+document.getElementById('randomBtn').addEventListener('click', openRandom);
+document.getElementById('mNext').addEventListener('click', openRandom);
+
+document.getElementById('mReveal').addEventListener('click', () => {
+  const en = document.getElementById('mEn');
+  en.classList.remove('masked');
+  document.getElementById('mReveal').textContent = '已显示 ✓';
+});
+
+document.getElementById('mEn').addEventListener('click', () => {
+  document.getElementById('mEn').classList.remove('masked');
+  document.getElementById('mReveal').textContent = '已显示 ✓';
+});
+
+document.getElementById('mStar').addEventListener('click', () => {
+  if (!modalItem) return;
+  const id = modalItem.id;
+  mastered.has(id) ? mastered.delete(id) : mastered.add(id);
+  saveMastered();
+  renderModal();
+  render();
+});
+
+document.getElementById('mClose').addEventListener('click', () => $overlay.classList.remove('show'));
+$overlay.addEventListener('click', e => { if (e.target === $overlay) $overlay.classList.remove('show'); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') $overlay.classList.remove('show');
+  if (e.key === ' ' && $overlay.classList.contains('show')) {
+    e.preventDefault();
+    document.getElementById('mEn').classList.remove('masked');
+    document.getElementById('mReveal').textContent = '已显示 ✓';
+  }
+});
+
+/* =========================================================
+   8. 启动
+   ========================================================= */
+renderOutline();
+render();
+</script>
+</body>
+</html>
